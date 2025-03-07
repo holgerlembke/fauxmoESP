@@ -623,9 +623,9 @@ void fauxmoESP::handle() {
     if (_enabled) _handleUDP();
 }
 
-void fauxmoESP::enable(bool enable) {
+bool fauxmoESP::enable(bool enable) {
 
-	if (enable == _enabled) return;
+	if (enable == _enabled) return true;
     _enabled = enable;
 	if (_enabled) {
 		DEBUG_MSG_FAUXMO("[FAUXMO] Enabled\n");
@@ -648,12 +648,22 @@ void fauxmoESP::enable(bool enable) {
 
 		// UDP setup
 		#ifdef ESP32
-            _udp.beginMulticast(FAUXMO_UDP_MULTICAST_IP, FAUXMO_UDP_MULTICAST_PORT);
+            if (!_udp.beginMulticast(FAUXMO_UDP_MULTICAST_IP, FAUXMO_UDP_MULTICAST_PORT)) {
+                Serial.printf("[FAUXMO]: Multicast Failed\r\n");
+				return false;
+            } else {
+                DEBUG_MSG_FAUXMO("[FAUXMO] UDP server started\n");
+            }
         #else
-            _udp.beginMulticast(WiFi.localIP(), FAUXMO_UDP_MULTICAST_IP, FAUXMO_UDP_MULTICAST_PORT);
+            if (!_udp.beginMulticast(WiFi.localIP(), FAUXMO_UDP_MULTICAST_IP, FAUXMO_UDP_MULTICAST_PORT)) {
+                Serial.printf("[FAUXMO]: Multicast Failed\r\n");
+				return false;
+            } else {
+                DEBUG_MSG_FAUXMO("[FAUXMO] UDP server started\n");
+            }
         #endif
-        DEBUG_MSG_FAUXMO("[FAUXMO] UDP server started\n");
-
 	}
+
+	return true;
 
 }

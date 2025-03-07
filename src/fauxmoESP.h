@@ -106,7 +106,7 @@ class fauxmoESP {
         bool setState(unsigned char id, bool state, unsigned char value, byte* rgb);
         bool setState(const char * device_name, bool state, unsigned char value, byte* rgb);
         bool process(AsyncClient *client, bool isGet, String url, String body);
-        void enable(bool enable);
+        bool enable(bool enable);
         void createServer(bool internal) { _internal = internal; }
         void setPort(unsigned long tcp_port) { _tcp_port = tcp_port; }
         void handle();

@@ -12,3 +12,6 @@ pio
 .gcc-flags.json
 .pioenvs
 .piolibdeps
+
+# / me lazy
+gitupload.cmd
